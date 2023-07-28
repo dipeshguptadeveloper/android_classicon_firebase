@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "840189384056",
+    "project_id": "classicon-8c84b",
+    "storage_bucket": "classicon-8c84b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840189384056:android:70eac3cdacbe4ff664648d",
+        "android_client_info": {
+          "package_name": "com.dkgtech.classicon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840189384056-t0s2iqria7otf8vf6pfue887qp31lh1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeaVG0GN9dGrGkvZjk1tF2JoDgn1v87gQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840189384056-t0s2iqria7otf8vf6pfue887qp31lh1c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
