@@ -1,17 +1,19 @@
 package com.dkgtech.classicon
 
+import android.app.AlertDialog
 import android.app.Dialog
-import android.graphics.drawable.GradientDrawable.Orientation
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.dkgtech.classicon.databinding.ActivityMainBinding
 import com.dkgtech.classicon.databinding.AddNoteDialogBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
+
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var firestoreDB: FirebaseFirestore
 
+    lateinit var auth: FirebaseAuth
+
     val arrNotes = ArrayList<NoteModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,9 +31,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        with(binding) {
+        firestoreDB = Firebase.firestore
 
-            firestoreDB = Firebase.firestore
+        auth = Firebase.auth
+
+        with(binding) {
 
 
 //            add data
@@ -84,6 +90,7 @@ class MainActivity : AppCompatActivity() {
 
                         val noteModel = doc.toObject(NoteModel::class.java)
                         noteModel?.let {
+                            noteModel.docId = doc.id
                             arrNotes.add(noteModel)
                         }
 
@@ -95,9 +102,56 @@ class MainActivity : AppCompatActivity() {
                     rcViewNotes.adapter = RecyclerNoteAdapter(this@MainActivity, arrNotes)
 
                 }
+        }
+    }
 
+    fun updateNote(noteModel: NoteModel) {
+        val dialog = Dialog(this@MainActivity)
+        val dialogBinding = AddNoteDialogBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
 
+        with(dialogBinding) {
+            noteTitle.text = "Update Note"
+            edtTitle.setText(noteModel.title)
+            edtDesc.setText(noteModel.desc)
+            btnAdd.text = "Save"
         }
 
+        with(dialogBinding) {
+            btnAdd.setOnClickListener {
+
+            }
+        }
+        dialog.show()
     }
+
+    fun deleteNote(docId: String) {
+        val deleteDialog = AlertDialog.Builder(this@MainActivity)
+            .setTitle("Delete Note")
+            .setMessage("Are you sure you want to delete?")
+            .setCancelable(false)
+            .setPositiveButton("Yes", object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Note Deleted Successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    firestoreDB
+                        .collection("notes")
+                        .document(docId)
+                        .delete()
+                }
+            })
+
+            .setNegativeButton("No", object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                }
+            })
+
+        deleteDialog.show()
+
+    }
+
 }

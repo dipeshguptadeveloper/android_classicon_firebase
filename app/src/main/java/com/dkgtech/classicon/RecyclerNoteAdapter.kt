@@ -27,5 +27,15 @@ class RecyclerNoteAdapter(val context: Context, val arrNote: ArrayList<NoteModel
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.txtIndex.text = "${position + 1}"
         holder.bind(arrNote[position])
+
+        holder.binding.llWrapper.setOnLongClickListener {
+            (context as MainActivity).updateNote(arrNote[position])
+            true
+        }
+
+        holder.binding.btnDelete.setOnClickListener {
+            (context as MainActivity).deleteNote(arrNote[position].docId)
+        }
+
     }
 }
